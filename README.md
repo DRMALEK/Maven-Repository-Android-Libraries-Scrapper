@@ -21,11 +21,11 @@ A scrapper to download the most popular and most relevance Android third-party l
     "springio-libs-release",
     "google",
     "ibiblio-m2"
-] or "all" to use downloads libs from the menisoned repos
+] ,or "all" to download libs from all the listed repos
 
   *Sorting criteria* can be anyone of : [
     "relevance",
     "popular",
-] or "all" to use both cirterias 
+], or "all" to use both cirterias 
 
-  Download_all is parameter to indicate whether to download all releases of a library (true) or not (false) to Just download the last release of the library.
+  *Download_all* is an argument to indicate whether to download all releases of a library (true) or not (false), to  download just the last release of the library.
