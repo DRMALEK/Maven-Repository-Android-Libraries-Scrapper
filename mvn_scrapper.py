@@ -96,7 +96,7 @@ def download_releases(releases_urls, sleep_duration, maximum_tries_per_url):
     for release_url in releases_urls:
         response = send_request(release_url, sleep_duration, maximum_tries_per_url, "lib release page")
 
-        # Try to pase the content of the artifact page, in case of error, continue to the next release
+        # Try to parse the content of the artifact page, in case of error, continue to the next release
         content = bs4.BeautifulSoup(response, 'html.parser')
         release_downloading_urls_page_url = content.find(name = "a", text = "View All")["href"]
 
@@ -278,3 +278,4 @@ if __name__ == "__main__":
 
     request_params = build_request_params(to_be_scraped_criterias, to_be_scraped_repos)
     main(request_params, sleep_duration, all_versions, maximum_tries_per_url)
+    
