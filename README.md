@@ -29,3 +29,8 @@ A scrapper to download the most popular and most relevance Android third-party l
 ], or "all" to use both cirterias 
 
   *Download_all* is an argument to indicate whether to download all releases of a library (true) or not (false), to  download just the last release of the library.
+  
+  
+### Notes
+
+The downloaded libraries will be stored in a folder named "out_repo" in the current working directory.
