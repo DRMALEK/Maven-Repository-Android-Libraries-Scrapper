@@ -6,6 +6,8 @@ import os
 import sys
 import time
 import ssl
+import re
+import json
 
 base_search_url = "https://mvnrepository.com/search?"
 
@@ -84,6 +86,27 @@ def return_home_page_url(bs4_object):
             return home_page
 
 
+def return_artifact_info(bs4_object):
+    maven_desc = bs4_object.find(name="textarea", id="maven-a").get_text().replace('\n', '')
+    # serach for artifact id
+    match = re.search("<groupId>(.*)</groupId>", maven_desc)
+    group_id = ""
+    if match:
+        group_id = match.group(1)
+    # search for group id
+    match = re.search("<artifactId>(.*)</artifactId>", maven_desc)
+    artifact_id = ""
+    if match:
+        artifact_id = match.group(1) 
+    # serach for version 
+    match = re.search("<version>(.*)</version>", maven_desc)
+    version = ""
+    if match:
+        version = match.group(1)
+
+    return (artifact_id, group_id, version)
+
+
 def download_releases(releases_urls, sleep_duration, maximum_tries_per_url):
     dir_lib_created = False
     print(releases_urls)
@@ -101,6 +124,7 @@ def download_releases(releases_urls, sleep_duration, maximum_tries_per_url):
             "class" : "im-title"}).find_all(name="a")[-1].text
 
         artifact_home_page = return_home_page_url(content)
+        artifact_id, group_id, version = return_artifact_info(content)
 
         if not artifact_home_page:
             artifact_home_page = artifact_name
@@ -123,8 +147,15 @@ def download_releases(releases_urls, sleep_duration, maximum_tries_per_url):
             os.mkdir(os.path.join("out_repo" , artifact_name, artifact_version))
 
             # Write the home page info into to a file
-            with open(os.path.join("out_repo" , artifact_name, "homePage.txt"), "w+") as home_page_file:
-                home_page_file.write(artifact_home_page)
+            with open(os.path.join("out_repo" , artifact_name, "info.json"), "w+") as info_file:
+                info = {
+                    "home_page" : artifact_home_page,
+                    "artifact_id" : artifact_id,
+                    "group_id" : group_id,
+                    "version": version
+                }
+                json.dump(info, info_file, indent= 2)
+
                 release_downloading_urls_page = send_request(release_downloading_urls_page_url, 
                                                              sleep_duration, 
                                                              maximum_tries_per_url, 
